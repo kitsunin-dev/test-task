@@ -1,2 +1,14 @@
-# test-task
-A repository with files for test task (made in C++).
+## Тестовое задание на вакансию C++ Intern/Trainee in Telecom
+### Содержание репозитория
+
+_Тут что-то скоро будет..._
+
+### Инструкция по сборке
+
+#### Linux: 
+
+_И тут тоже..._
+
+#### Windows:
+
+_И еще здесь..._
