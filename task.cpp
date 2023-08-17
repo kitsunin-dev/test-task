@@ -210,7 +210,6 @@ int main(int argc, char** argv)
         }
         catch(const std::exception& e)
         {
-            // cerr << "Exception: " << e.what() << endl;
             cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
             cout << line << endl;
             return 1;
@@ -218,7 +217,7 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::cerr << "Unable to open the text file.";
+        std::cerr << "Unable to open the text file." << endl;
         return 1;
     }
     
