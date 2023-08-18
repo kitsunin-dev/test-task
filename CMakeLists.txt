@@ -1,3 +1,3 @@
-cmake_minimum_required(VERSION 3.26.5 FATAL_ERROR)
-project(test-task)
-add_executable(test-task src/task.cpp src/task.h)
+cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
+project(task)
+add_executable(task task.cpp)

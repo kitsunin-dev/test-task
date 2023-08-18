@@ -59,16 +59,25 @@ int main(int argc, char** argv)
 
                         break;
                     case 1:
-                        init.open_time[0] = stoi(line.substr(0, 2));
-                        init.open_time[1] = stoi(line.substr(3, 2));
-                        init.close_time[0] = stoi(line.substr(6, 2));
-                        init.close_time[1] = stoi(line.substr(9, 2));
+                        if (line[2] != ':' || line[5] != ' ' || line[8] != ':')
+                        {
+                            cerr << "Bad clock format. Cannot process line " << i + 1 << ":" << endl;
+                            cout << line << endl;
+                            return 1;  
+                        }
+                        else
+                        {
+                            init.open_time[0] = stoi(line.substr(0, 2));
+                            init.open_time[1] = stoi(line.substr(3, 2));
+                            init.close_time[0] = stoi(line.substr(6, 2));
+                            init.close_time[1] = stoi(line.substr(9, 2));
 
-                        open_time_str = line.substr(0, 5);
-                        close_time_str = line.substr(6, 5);
+                            open_time_str = line.substr(0, 5);
+                            close_time_str = line.substr(6, 5);
 
-                        lines.push_back(open_time_str);
-                        break;
+                            lines.push_back(open_time_str);
+                            break;
+                        }
                     case 2:
                         init.hour_cost = stoi(line);
                         break;
@@ -224,7 +233,7 @@ int main(int argc, char** argv)
         }
         catch(const std::exception& e)
         {
-            cerr << "Exception: " << e.what() << ". Cannot process line " << i + 1 << ":" << endl;
+            cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
             cout << line << endl;
             return 1;
         }   
