@@ -35,7 +35,6 @@ int main(int argc, char** argv)
                     continue;
 
                 switch (i)
-
                 {
                     case 0:
 
@@ -77,7 +76,7 @@ int main(int argc, char** argv)
 
                         if (line[2] != ':' || line[5] != ' ' || line[7] != ' ')
                         {
-                            cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
+                            cerr << "Bad line format. Cannot process line " << i + 1 << ":" << endl;
                             cout << line << endl;
                             return 1;  
                         }
@@ -92,115 +91,130 @@ int main(int argc, char** argv)
                         {
                             switch (j)
                             {
-                            case 0:
-                                if (stoi(token.substr(0, 2)) < ev.time[0] || (stoi(token.substr(0, 2)) == ev.time[0]) && stoi(token.substr(3, 2)) < ev.time[1])
-                                {
-                                    cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
-                                    cout << line << endl;
-                                    return 1;        
-                                } 
-                                
-                                ev.time[0] = stoi(token.substr(0, 2));
-                                ev.time[1] = stoi(token.substr(3, 2));
+                                case 0:
+                                    if (stoi(token.substr(0, 2)) < ev.time[0] || 
+                                       (stoi(token.substr(0, 2)) == ev.time[0]) && 
+                                        stoi(token.substr(3, 2)) < ev.time[1])
+                                    {
+                                        cerr << "Bad clock format. Cannot process line " << i + 1 << ":" << endl;
+                                        cout << line << endl;
+                                        return 1;        
+                                    } 
+                                    
+                                    ev.time[0] = stoi(token.substr(0, 2));
+                                    ev.time[1] = stoi(token.substr(3, 2));
 
-                                if (ev.time[0] > 23 || ev.time[1] > 59)
-                                {
-                                    cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
-                                    cout << line << endl;
-                                    return 1;        
-                                }
-                                break;
-                            case 1:
-                                ev.id = stoi(token);
-                                break;
-                            case 2:
-                                ev.name = token;
-                                break;
-                            case 3:
-                                ev.table = stoi(token);
-                                break;
-                            default:
-                                break;
+                                    if (ev.time[0] > 23 || ev.time[1] > 59)
+                                    {
+                                        cerr << "Bad clock format. Cannot process line " << i + 1 << ":" << endl;
+                                        cout << line << endl;
+                                        return 1;        
+                                    }
+                                    break;
+                                case 1:
+                                    ev.id = stoi(token);
+
+                                    if (ev.id < 1 || ev.id > 4)
+                                    {
+                                        cerr << "Wrong event id. Cannot process line " << i + 1 << ":" << endl;
+                                        cout << line << endl;
+                                        return 1;        
+                                    }
+                                    break;
+                                case 2:
+                                    ev.name = token;
+                                    break;
+                                case 3:
+                                    ev.table = stoi(token);
+
+                                    if (ev.table > init.tables)
+                                    {
+                                        cerr << "Wrong table. Cannot process line " << i + 1 << ":" << endl;
+                                        cout << line << endl;
+                                        return 1;        
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                             ++j;
                         }
 
                         switch (ev.id)
                         {
-                        case 1:
-                            if (compare_time(ev.time, init.open_time) && !clients.count(ev.name))
-                                clients.insert(ev.name);
-                            else if (clients.count(ev.name))
-                                lines.push_back(int_to_str(ev.time) + " 13 YouShallNotPass");
-                            else if (!compare_time(ev.time, init.open_time))
-                                lines.push_back(int_to_str(ev.time) + " 13 NotOpenYet");
-                            break;
-                        case 2:
+                            case 1:
+                                if (compare_time(ev.time, init.open_time) && !clients.count(ev.name))
+                                    clients.insert(ev.name);
+                                else if (clients.count(ev.name))
+                                    lines.push_back(int_to_str(ev.time) + " 13 YouShallNotPass");
+                                else if (!compare_time(ev.time, init.open_time))
+                                    lines.push_back(int_to_str(ev.time) + " 13 NotOpenYet");
+                                break;
+                            case 2:
 
-                            if (!ev.table)
-                            {
-                                cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
-                                cout << line << endl;
-                                return 1;  
-                            }
-                            if (!clients.count(ev.name))
-                                lines.push_back(int_to_str(ev.time) + " 13 ClientUnknown");
-                            else if (occupied_tables[ev.table - 1] != "")
-                                lines.push_back(int_to_str(ev.time) + " 13 PlaceIsBusy");
-                            else
-                            {
+                                if (!ev.table)
+                                {
+                                    cerr << "No table entered. Cannot process line " << i + 1 << ":" << endl;
+                                    cout << line << endl;
+                                    return 1;  
+                                }
+                                if (!clients.count(ev.name))
+                                    lines.push_back(int_to_str(ev.time) + " 13 ClientUnknown");
+                                else if (occupied_tables[ev.table - 1] != "")
+                                    lines.push_back(int_to_str(ev.time) + " 13 PlaceIsBusy");
+                                else
+                                {
+                                    occupied_tables[ev.table - 1] = ev.name;
+                                    occupation_time[ev.table - 1][0] = ev.time[0];
+                                    occupation_time[ev.table - 1][1] = ev.time[1];
+                                }
 
-                                occupied_tables[ev.table - 1] = ev.name;
-                                occupation_time[ev.table - 1][0] = ev.time[0];
-                                occupation_time[ev.table - 1][1] = ev.time[1];
-                            }
+                                if (!cl_queue.empty())
+                                    if (cl_queue.front() == ev.name)
+                                        cl_queue.pop();
 
-                            if (!cl_queue.empty())
-                                if (cl_queue.front() == ev.name)
-                                    cl_queue.pop();
+                                break;
+                            case 3:
+                                if(std::count(occupied_tables.begin(), occupied_tables.end(), ""))
+                                    lines.push_back(int_to_str(ev.time) + " 13 ICanWaitNoLonger!");
+                                else if (cl_queue.size() == init.tables)
+                                {
+                                    clients.erase(ev.name);
+                                    lines.push_back(int_to_str(ev.time) + " 11 " + ev.name);
+                                }
+                                else
+                                    cl_queue.push(ev.name);
 
-                            break;
-                        case 3:
-                            if(std::count(occupied_tables.begin(), occupied_tables.end(), ""))
-                                lines.push_back(int_to_str(ev.time) + " 13 ICanWaitNoLonger!");
-                            else if (cl_queue.size() == init.tables)
-                            {
-                                clients.erase(ev.name);
-                                lines.push_back(int_to_str(ev.time) + " 11 " + ev.name);
-                            }
-                            else
-                                cl_queue.push(ev.name);
-
-                            break;
-                        case 4:
-                            if (!clients.count(ev.name))
-                                lines.push_back(int_to_str(ev.time) + " 13 ClientUnknown");
-                            else
-                                for (auto it = occupied_tables.begin(); it < occupied_tables.end(); ++it)
-                                    if (*it == ev.name)
-                                    {
-                                        revenue[it - occupied_tables.begin()] += spent_hours(occupation_time[it - occupied_tables.begin()], ev.time) * init.hour_cost;
-                                        total_occ_time[it - occupied_tables.begin()] += ev.time[0] * MINS + ev.time[1] - 
-                                                                                        (occupation_time[it - occupied_tables.begin()][0] * MINS + 
-                                                                                        occupation_time[it - occupied_tables.begin()][1]);
-                                        if (!cl_queue.empty())
+                                break;
+                            case 4:
+                                if (!clients.count(ev.name))
+                                    lines.push_back(int_to_str(ev.time) + " 13 ClientUnknown");
+                                else
+                                    for (auto it = occupied_tables.begin(); it < occupied_tables.end(); ++it)
+                                        if (*it == ev.name)
                                         {
-                                            *it = cl_queue.front();
-                                            cl_queue.pop();
-                                            occupation_time[it - occupied_tables.begin()][0] = ev.time[0];
-                                            occupation_time[it - occupied_tables.begin()][1] = ev.time[1];
-                                            lines.push_back(int_to_str(ev.time) + " 12 " + *it + " " + std::to_string(it - occupied_tables.begin() + 1));
+                                            revenue[it - occupied_tables.begin()] += spent_hours(occupation_time[it - occupied_tables.begin()], ev.time) * init.hour_cost;
+                                            total_occ_time[it - occupied_tables.begin()] += ev.time[0] * MINS + ev.time[1] - 
+                                                                                            (occupation_time[it - occupied_tables.begin()][0] * MINS + 
+                                                                                            occupation_time[it - occupied_tables.begin()][1]);
+                                            if (!cl_queue.empty())
+                                            {
+                                                *it = cl_queue.front();
+                                                cl_queue.pop();
+                                                occupation_time[it - occupied_tables.begin()][0] = ev.time[0];
+                                                occupation_time[it - occupied_tables.begin()][1] = ev.time[1];
+                                                lines.push_back(int_to_str(ev.time) + " 12 " + *it + " " + std::to_string(it - occupied_tables.begin() + 1));
+                                            }
+                                            else
+                                                *it = "";
+
+                                            clients.erase(ev.name);
+                                            
+                                            break;
                                         }
-                                        else
-                                            *it = "";
 
-                                        clients.erase(ev.name);
-                                        
-                                        break;
-                                    }
-
-                        default:
-                            break;
+                            default:
+                                break;
                         }
 
                     break;
@@ -210,7 +224,7 @@ int main(int argc, char** argv)
         }
         catch(const std::exception& e)
         {
-            cerr << "Bad format. Cannot process line " << i + 1 << ":" << endl;
+            cerr << "Exception: " << e.what() << ". Cannot process line " << i + 1 << ":" << endl;
             cout << line << endl;
             return 1;
         }   
