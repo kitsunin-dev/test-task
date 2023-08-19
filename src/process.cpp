@@ -38,15 +38,34 @@ int process_file(std::ifstream &file)
 
             if (i < 3)
             {
+                if (i == 0 || i == 2)
+                    if (check_number(line))
+                    {
+                        cerr << "Bad line format. Cannot process line " << i + 1 << ":" << endl;
+                        cout << line << endl;
+                        return 1;     
+                    }
+
                 if (process_init(&init, &proc, i, line, &lines))
                     return 1;
 
-                open_time_str = int_to_str(init.open_time);
-                close_time_str = int_to_str(init.close_time);
+                if (i == 1)
+                {
+                    open_time_str = line.substr(0, 5);
+                    close_time_str = line.substr(6, 5);
+                }
+
+                if (i == 1 && (check_clock(open_time_str) || check_clock(close_time_str)))
+                {
+                    cerr << "Bad clock format. Cannot process line 2:" << endl;
+                    cout << line << endl;
+                    return 1;
+                }
             }
             else
             {
-                if (line[2] != ':' || line[5] != ' ' || line[7] != ' ')
+                if (line[2] != ':' || line[5] != ' ' || 
+                    line[7] != ' ' || check_clock(line.substr(0, 5)))
                 {
                     cerr << "Bad line format. Cannot process line " << i + 1 << ":" << endl;
                     cout << line << endl;

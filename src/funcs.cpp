@@ -12,6 +12,42 @@ using std::endl;
 using std::string;
 using std::vector;
 
+int check_number(string line)
+{
+    string digits = "0123456789";
+    for (int i = 0; i < line.length(); ++i)
+    {
+        if (digits.find(line[i]) == string::npos)
+            return 1;
+    }
+    return 0;
+}
+
+int check_clock(string time)
+{
+    string digits = "0123456789";
+
+    int hours = stoi(time.substr(0, 2));
+    int minutes = stoi(time.substr(3, 2));
+
+    if (digits.find(time[0]) != string::npos &&
+        digits.find(time[1]) != string::npos &&
+        digits.find(time[3]) != string::npos &&
+        digits.find(time[4]) != string::npos &&
+        time[2] == ':')
+    {
+        if (hours >= 0 && hours < 24)
+        {
+            if (minutes >= 0 && minutes < 60)
+            {
+                return 0;
+            }
+        }
+    }
+    
+    return 1;
+}
+
 string int_to_str(array<unsigned int, 2> time)
 {
     string output;
@@ -101,6 +137,13 @@ int process_init(initial *init, proc_vars *proc, int i, string line, vector<stri
             init->open_time[1] = stoi(line.substr(3, 2));
             init->close_time[0] = stoi(line.substr(6, 2));
             init->close_time[1] = stoi(line.substr(9, 2));
+
+            if (compare_time(init->open_time, init->close_time))
+            {
+                cerr << "Bad clock format. Cannot process line " << i + 1 << ":" << endl;
+                cout << line << endl;
+                return 1;               
+            }
 
             lines->push_back(line.substr(0, 5));
             break;
