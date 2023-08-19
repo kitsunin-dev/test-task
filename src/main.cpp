@@ -1,8 +1,8 @@
-#include "task.h"
+#include "funcs.h"
 #include <iostream>
 #include <fstream>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     std::ifstream file;
 
@@ -15,7 +15,7 @@ int main(int argc, char** argv)
         std::cerr << "Unable to open text file" << std::endl;
         return 1;
     }
-    
+
     file.close();
     return 0;
 }
