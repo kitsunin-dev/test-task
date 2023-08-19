@@ -18,4 +18,6 @@ void show_revenue(proc_vars *, initial);
 int tokenize(std::string, event *, initial, int);
 int process_line(std::string, std::vector<std::string> *, event, initial, proc_vars *, int);
 
+void tests();
+
 #endif // FUNCS_H

@@ -27,15 +27,14 @@ int check_clock(string time)
 {
     string digits = "0123456789";
 
-    int hours = stoi(time.substr(0, 2));
-    int minutes = stoi(time.substr(3, 2));
-
     if (digits.find(time[0]) != string::npos &&
         digits.find(time[1]) != string::npos &&
         digits.find(time[3]) != string::npos &&
         digits.find(time[4]) != string::npos &&
         time[2] == ':')
     {
+        int hours = stoi(time.substr(0, 2));
+        int minutes = stoi(time.substr(3, 2));
         if (hours >= 0 && hours < 24)
         {
             if (minutes >= 0 && minutes < 60)
@@ -68,15 +67,18 @@ string int_to_str(array<unsigned int, 2> time)
 
 bool compare_time(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
 {
-    if (time1[0] < time2[0] || (time1[0] == time2[0] && time1[0] < time2[1]))
+    if (time1[0] < time2[0] || (time1[0] == time2[0] && time1[1] < time2[1]))
         return false;
-    else
-        return true;
+    return true;
 }
 
 int spent_hours(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
 {
-    return ceil((time2[0] + (float)time2[1] / MINS) - (time1[0] + (float)time1[1] / MINS));
+    if (time1 == time2)
+        return 0;
+    if (!compare_time(time1, time2))
+        return ceil((time2[0] + (float)time2[1] / MINS) - (time1[0] + (float)time1[1] / MINS));
+    return -1;
 }
 
 void show_revenue(proc_vars *proc, initial init)

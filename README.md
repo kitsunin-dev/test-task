@@ -49,11 +49,11 @@ cmake --build . --target task
 #### 3. Через команду компилятора
 Откройте терминал в папке с репозиторием. В окне терминала выполните следующую команду:
 ```
-clang src/main.cpp src/process.cpp src/funcs.cpp -o task -lstdc++ -lm
+clang src/main.cpp src/process.cpp src/funcs.cpp src/assert.cpp -o task -lstdc++ -lm
 ```
 Или же с помощью компилятора `gcc`:
 ```
-gcc src/main.cpp src/process.cpp src/funcs.cpp -o task -lstdc++ -lm
+gcc src/main.cpp src/process.cpp src/funcs.cpp src/assert.cpp -o task -lstdc++ -lm
 ```
 В обоих случаях в папке появится исполняемый файл `task`. После этого выполните команду:
 ```

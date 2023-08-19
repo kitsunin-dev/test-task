@@ -5,4 +5,5 @@ project(task)
 add_executable(task 
     src/main.cpp 
     src/process.cpp 
-    src/funcs.cpp) 
+    src/funcs.cpp
+    src/assert.cpp) 

@@ -4,6 +4,8 @@
 
 int main(int argc, char **argv)
 {
+    tests();
+
     std::ifstream file;
 
     file.open(argv[1], std::ios::in);
