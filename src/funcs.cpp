@@ -1,27 +1,8 @@
-#ifndef TASK_H
-#define TASK_H
-
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <array>
-#include <set>
-#include <queue>
-#include <algorithm>
+#include "task.h"
 #include <cmath>
 
-using std::cout;
-using std::endl;
-using std::cerr;
 using std::string;
 using std::array;
-using std::vector;
-using std::set;
-using std::queue;
-
-#define MINS 60
 
 string int_to_str(array<unsigned int, 2> time)
 {
@@ -59,21 +40,3 @@ int spent_hours(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
 {
     return ceil((time2[0] + (float) time2[1] / MINS) - (time1[0] + (float) time1[1] / MINS));
 }
-
-struct initial
-{
-    unsigned int tables;
-    array<unsigned int, 2> open_time;
-    array<unsigned int, 2> close_time;
-    unsigned int hour_cost;
-};
-
-struct event
-{
-    array<unsigned int, 2> time;
-    unsigned int id;
-    string name;
-    unsigned int table;
-};
-
-#endif // TASK_H
