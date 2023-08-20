@@ -14,4 +14,4 @@
 10:10 3 dima
 11:56 4 asya
 12:12 4 galya
-12:16 2 dima 
+12:16 2 dima 1
