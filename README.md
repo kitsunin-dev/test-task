@@ -13,7 +13,7 @@
 
 Для начала склонируйте репозиторий к себе на компьютер через команду терминала:
 ```
-git clone git@github.com:kitsunin-dev/test-task.git
+git clone https://github.com/kitsunin-dev/test-task.git
 ```
 Способы сборки проекта:
 
