@@ -66,6 +66,13 @@ int process_file(std::ifstream &file)
             }
             else // ...затем все остальные
             {
+                if (line.length() < 9)
+                {
+                    cerr << "Bad line format. Cannot process line " << i + 1 << ":" << endl;
+                    cout << line << endl;
+                    return 1;
+                }
+
                 if (line[2] != ':' || line[5] != ' ' ||
                     line[7] != ' ' || check_clock(line.substr(0, 5)))
                 {
