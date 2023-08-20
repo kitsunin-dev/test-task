@@ -5,6 +5,8 @@
 #include <string>
 #include <array>
 
+// прототипы пользовательских функций
+
 std::string int_to_str(std::array<unsigned int, 2>);
 bool compare_time(std::array<unsigned int, 2>, std::array<unsigned int, 2>);
 int spent_hours(std::array<unsigned int, 2>, std::array<unsigned int, 2>);

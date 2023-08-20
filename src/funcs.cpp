@@ -12,6 +12,8 @@ using std::endl;
 using std::string;
 using std::vector;
 
+// проверяет, содержит ли строка только
+// целочисленное положительное число
 int check_number(string line)
 {
     string digits = "0123456789";
@@ -23,6 +25,8 @@ int check_number(string line)
     return 0;
 }
 
+// проверяет строку на соответствие
+// временному формату hh:mm
 int check_clock(string time)
 {
     string digits = "0123456789";
@@ -47,6 +51,8 @@ int check_clock(string time)
     return 1;
 }
 
+// превращает массив с часами и минутами в
+// отформатированную строку
 string int_to_str(array<unsigned int, 2> time)
 {
     string output;
@@ -65,6 +71,8 @@ string int_to_str(array<unsigned int, 2> time)
     return output;
 }
 
+// сравнивает два момента времени: если первый раньше второго -
+// возвращает false, иначе true
 bool compare_time(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
 {
     if (time1[0] < time2[0] || (time1[0] == time2[0] && time1[1] < time2[1]))
@@ -72,6 +80,8 @@ bool compare_time(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
     return true;
 }
 
+// считает, сколько целых часов прошло между двумя моментами времени
+// (округление с избытком)
 int spent_hours(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
 {
     if (time1 == time2)
@@ -81,6 +91,8 @@ int spent_hours(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
     return -1;
 }
 
+// подсчитывает доход от столов, занятых в конце рабочего дня,
+// складывает с общим доход и выводит для каждого стола
 void show_revenue(proc_vars *proc, initial init)
 {
     int curr;
@@ -100,6 +112,8 @@ void show_revenue(proc_vars *proc, initial init)
              << endl;
 }
 
+// обрабатывает первые 3 строки текстового файла:
+// заносит в init кол-во столов, время работы и стоимость часа
 int process_init(initial *init, proc_vars *proc, int i, string line, vector<string> *lines)
 {
     switch (i)
@@ -160,6 +174,8 @@ int process_init(initial *init, proc_vars *proc, int i, string line, vector<stri
     return 0;
 }
 
+// делит строку на токены, заносит в ev информацию о событии
+// (время, id, имя клиента и номер стола для id = 2)
 int tokenize(string line, event *ev, initial init, int i)
 {
     std::stringstream ss(line);
@@ -222,9 +238,18 @@ int tokenize(string line, event *ev, initial init, int i)
     return 0;
 }
 
+// производит обработку события в зависимости от id события:
+// обновляет информацию о клиентах, занятых столах, очереди, доходе,
+// выводит в терминал возможные ошибки
 int process_line(string line, vector<string> *lines, event ev, initial init, proc_vars *proc, int i)
 {
-    int curr;
+    int curr; 
+    if (!compare_time(ev.time, init.open_time) ||
+        !compare_time(init.close_time, ev.time))
+    {
+        lines->push_back(int_to_str(ev.time) + " 13 NotOpenYet");
+        return 0;
+    }
     switch (ev.id)
     {
     case 1:
@@ -232,8 +257,6 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
             proc->clients.insert(ev.name);
         else if (proc->clients.count(ev.name))
             lines->push_back(int_to_str(ev.time) + " 13 YouShallNotPass");
-        else if (!compare_time(ev.time, init.open_time))
-            lines->push_back(int_to_str(ev.time) + " 13 NotOpenYet");
         break;
     case 2:
 
@@ -249,6 +272,16 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
             lines->push_back(int_to_str(ev.time) + " 13 PlaceIsBusy");
         else
         {
+            for (auto it = proc->occupied_tables.begin(); it < proc->occupied_tables.end(); ++it)
+                if (*it == ev.name)
+                {
+                    *it = ""; 
+                    curr = it - proc->occupied_tables.begin();
+                    proc->revenue[curr] += spent_hours(proc->occupation_time[curr], ev.time) * init.hour_cost;
+                    proc->total_occ_time[curr] += ev.time[0] * MINS + ev.time[1] -
+                                                  (proc->occupation_time[curr][0] * MINS +
+                                                   proc->occupation_time[curr][1]);
+                }
             curr = ev.table - 1;
             proc->occupied_tables[curr] = ev.name;
             proc->occupation_time[curr][0] = ev.time[0];
@@ -261,6 +294,8 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
 
         break;
     case 3:
+        if (std::count(proc->occupied_tables.begin(), proc->occupied_tables.end(), ev.name))
+            break;
         if (std::count(proc->occupied_tables.begin(), proc->occupied_tables.end(), ""))
             lines->push_back(int_to_str(ev.time) + " 13 ICanWaitNoLonger!");
         else if (proc->cl_queue.size() == init.tables)

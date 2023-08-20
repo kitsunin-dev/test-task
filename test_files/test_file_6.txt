@@ -10,7 +10,7 @@
 10:33 3 petya
 10:33 1 petya
 10:35 2 petya 1
-10:60 3 petya
+10:36 8 petya
 10:46 1 vasya
 10:49 2 vasya 1
 10:50 3 vasya

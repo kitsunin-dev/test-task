@@ -1,6 +1,7 @@
 #include "funcs.h"
 #include <cassert>
 
+// юнит-тесты для некоторых функций
 void tests()
 {
     assert(check_number("2") == 0);

@@ -9,6 +9,7 @@
 
 #define MINS 60
 
+// параметры из первых 3 строк файла
 struct initial
 {
     unsigned int tables;
@@ -17,6 +18,7 @@ struct initial
     unsigned int hour_cost;
 };
 
+// информация о событии
 struct event
 {
     std::array<unsigned int, 2> time;
@@ -25,6 +27,7 @@ struct event
     unsigned int table;
 };
 
+// переменные для обработки событий и подсчета выручки
 struct proc_vars
 {
     std::set<std::string> clients;

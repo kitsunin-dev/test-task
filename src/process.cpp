@@ -31,11 +31,13 @@ int process_file(std::ifstream &file)
     int i = 0;
     try
     {
+        // обрабатываем каждую строку в цикле
         while (std::getline(file, line))
         {
             if (line == "")
                 continue;
 
+            // сначала по-особому обрабатываем первые 3 строки...
             if (i < 3)
             {
                 if (i == 0 || i == 2)
@@ -62,7 +64,7 @@ int process_file(std::ifstream &file)
                     return 1;
                 }
             }
-            else
+            else // ...затем все остальные
             {
                 if (line[2] != ':' || line[5] != ' ' || 
                     line[7] != ' ' || check_clock(line.substr(0, 5)))
@@ -74,9 +76,11 @@ int process_file(std::ifstream &file)
 
                 lines.push_back(line);
 
+                // делим строку на токены
                 if (tokenize(line, &ev, init, i))
                     return 1;
 
+                // обрабатываем событие строки
                 if (process_line(line, &lines, ev, init, &proc, i))
                     return 1;
             }
@@ -89,15 +93,18 @@ int process_file(std::ifstream &file)
         cout << line << endl;
         return 1;
     }
-
+    
+    // выводим все события и возможные ошибки
     for (auto it = lines.begin(); it < lines.end(); ++it)
         cout << *it << endl;
 
+    // выгоняем всех задержавшихся клиентов
     for (auto it = proc.clients.begin(); it != proc.clients.end(); ++it)
         cout << close_time_str << " 11 " << *it << endl;
 
     std::cout << close_time_str << std::endl;
 
+    // подсчитываем и выводим доход от каждого стола
     show_revenue(&proc, init);
 
     return 0;
