@@ -267,9 +267,15 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
             return 1;
         }
         if (!proc->clients.count(ev.name))
+        {
             lines->push_back(int_to_str(ev.time) + " 13 ClientUnknown");
+            break;
+        }
         else if (proc->occupied_tables[ev.table - 1] != "")
+        {
             lines->push_back(int_to_str(ev.time) + " 13 PlaceIsBusy");
+            break;
+        }
         else
         {
             for (auto it = proc->occupied_tables.begin(); it < proc->occupied_tables.end(); ++it)
