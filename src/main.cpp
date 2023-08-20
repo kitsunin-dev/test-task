@@ -8,7 +8,7 @@ int main(int argc, char **argv)
     tests();
 
     std::ifstream file;
-    
+
     // пробуем открыть файл из аргумента
     file.open(argv[1], std::ios::in);
 

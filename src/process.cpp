@@ -45,7 +45,7 @@ int process_file(std::ifstream &file)
                     {
                         cerr << "Bad line format. Cannot process line " << i + 1 << ":" << endl;
                         cout << line << endl;
-                        return 1;     
+                        return 1;
                     }
 
                 if (process_init(&init, &proc, i, line, &lines))
@@ -66,7 +66,7 @@ int process_file(std::ifstream &file)
             }
             else // ...затем все остальные
             {
-                if (line[2] != ':' || line[5] != ' ' || 
+                if (line[2] != ':' || line[5] != ' ' ||
                     line[7] != ' ' || check_clock(line.substr(0, 5)))
                 {
                     cerr << "Bad line format. Cannot process line " << i + 1 << ":" << endl;
@@ -79,6 +79,13 @@ int process_file(std::ifstream &file)
                 // делим строку на токены
                 if (tokenize(line, &ev, init, i))
                     return 1;
+
+                if (check_name(ev.name))
+                {
+                    cerr << "Bad name format. Cannot process line " << i + 1 << ":" << endl;
+                    cout << line << endl;
+                    return 1;
+                }
 
                 // обрабатываем событие строки
                 if (process_line(line, &lines, ev, init, &proc, i))
@@ -93,7 +100,7 @@ int process_file(std::ifstream &file)
         cout << line << endl;
         return 1;
     }
-    
+
     // выводим все события и возможные ошибки
     for (auto it = lines.begin(); it < lines.end(); ++it)
         cout << *it << endl;

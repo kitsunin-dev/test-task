@@ -47,8 +47,20 @@ int check_clock(string time)
             }
         }
     }
-    
+
     return 1;
+}
+
+// проверяет имя клиента на соответствие формату
+int check_name(string name)
+{
+    string format = "abcdefghijklmnopqrstuvwxyz0123456789_-";
+
+    for (int i = 0; i < name.length(); ++i)
+        if (format.find(name[i]) == string::npos)
+            return 1;
+
+    return 0;
 }
 
 // превращает массив с часами и минутами в
@@ -158,7 +170,7 @@ int process_init(initial *init, proc_vars *proc, int i, string line, vector<stri
             {
                 cerr << "Bad clock format. Cannot process line " << i + 1 << ":" << endl;
                 cout << line << endl;
-                return 1;               
+                return 1;
             }
 
             lines->push_back(line.substr(0, 5));
@@ -243,7 +255,7 @@ int tokenize(string line, event *ev, initial init, int i)
 // выводит в терминал возможные ошибки
 int process_line(string line, vector<string> *lines, event ev, initial init, proc_vars *proc, int i)
 {
-    int curr; 
+    int curr;
     if (!compare_time(ev.time, init.open_time) ||
         !compare_time(init.close_time, ev.time))
     {
@@ -281,7 +293,7 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
             for (auto it = proc->occupied_tables.begin(); it < proc->occupied_tables.end(); ++it)
                 if (*it == ev.name)
                 {
-                    *it = ""; 
+                    *it = "";
                     curr = it - proc->occupied_tables.begin();
                     proc->revenue[curr] += spent_hours(proc->occupation_time[curr], ev.time) * init.hour_cost;
                     proc->total_occ_time[curr] += ev.time[0] * MINS + ev.time[1] -
@@ -317,6 +329,7 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
         if (!proc->clients.count(ev.name))
             lines->push_back(int_to_str(ev.time) + " 13 ClientUnknown");
         else
+        {
             for (auto it = proc->occupied_tables.begin(); it < proc->occupied_tables.end(); ++it)
                 if (*it == ev.name)
                 {
@@ -335,11 +348,10 @@ int process_line(string line, vector<string> *lines, event ev, initial init, pro
                     }
                     else
                         *it = "";
-
-                    proc->clients.erase(ev.name);
-
-                    break;
                 }
+            proc->clients.erase(ev.name);
+        }
+        break;
     default:
         break;
     }

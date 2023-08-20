@@ -12,6 +12,7 @@ bool compare_time(std::array<unsigned int, 2>, std::array<unsigned int, 2>);
 int spent_hours(std::array<unsigned int, 2>, std::array<unsigned int, 2>);
 int check_number(std::string);
 int check_clock(std::string);
+int check_name(std::string);
 
 int process_file(std::ifstream &);
 int process_init(initial *, proc_vars *, int, std::string, std::vector<std::string> *);
