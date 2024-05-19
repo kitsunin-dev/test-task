@@ -2,14 +2,15 @@
 #define FUNCS_H
 
 #include "structs.h"
+
 #include <string>
 #include <array>
 
 // прототипы пользовательских функций
 
-std::string int_to_str(std::array<unsigned int, 2>);
-bool compare_time(std::array<unsigned int, 2>, std::array<unsigned int, 2>);
-int spent_hours(std::array<unsigned int, 2>, std::array<unsigned int, 2>);
+std::string int_to_str(std::array<uint32_t, 2>);
+bool compare_time(std::array<uint32_t, 2>, std::array<uint32_t, 2>);
+int spent_hours(std::array<uint32_t, 2>, std::array<uint32_t, 2>);
 int check_number(std::string);
 int check_clock(std::string);
 int check_name(std::string);

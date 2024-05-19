@@ -12,19 +12,19 @@
 // параметры из первых 3 строк файла
 struct initial
 {
-    unsigned int tables;
-    std::array<unsigned int, 2> open_time;
-    std::array<unsigned int, 2> close_time;
-    unsigned int hour_cost;
+    uint32_t tables;
+    std::array<uint32_t, 2> open_time;
+    std::array<uint32_t, 2> close_time;
+    uint32_t hour_cost;
 };
 
 // информация о событии
 struct event
 {
-    std::array<unsigned int, 2> time;
-    unsigned int id;
+    std::array<uint32_t, 2> time;
+    uint32_t id;
     std::string name;
-    unsigned int table;
+    uint32_t table;
 };
 
 // переменные для обработки событий и подсчета выручки
@@ -32,9 +32,9 @@ struct proc_vars
 {
     std::set<std::string> clients;
     std::vector<std::string> occupied_tables;
-    std::vector<std::array<unsigned int, 2>> occupation_time;
-    std::vector<unsigned int> total_occ_time;
-    std::vector<unsigned int> revenue;
+    std::vector<std::array<uint32_t, 2>> occupation_time;
+    std::vector<uint32_t> total_occ_time;
+    std::vector<uint32_t> revenue;
     std::queue<std::string> cl_queue;
 };
 

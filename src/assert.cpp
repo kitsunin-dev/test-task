@@ -1,4 +1,5 @@
 #include "funcs.h"
+
 #include <cassert>
 
 // юнит-тесты для некоторых функций
@@ -28,7 +29,7 @@ void tests()
     assert(compare_time({1, 1}, {1, 1}) == true);
     assert(compare_time({0, 0}, {23, 59}) == false);
 
-    assert(spent_hours({9, 55}, {13, 01}) == 4);
+    assert(spent_hours({9, 55}, {13, 1}) == 4);
     assert(spent_hours({9, 55}, {9, 56}) == 1);
     assert(spent_hours({13, 7}, {16, 6}) == 3);
     assert(spent_hours({1, 5}, {1, 5}) == 0);

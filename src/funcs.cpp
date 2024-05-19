@@ -1,5 +1,6 @@
 #include "funcs.h"
 #include "structs.h"
+
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -65,7 +66,7 @@ int check_name(string name)
 
 // превращает массив с часами и минутами в
 // отформатированную строку
-string int_to_str(array<unsigned int, 2> time)
+string int_to_str(array<uint32_t, 2> time)
 {
     string output;
     if (time[0] < 10)
@@ -85,7 +86,7 @@ string int_to_str(array<unsigned int, 2> time)
 
 // сравнивает два момента времени: если первый раньше второго -
 // возвращает false, иначе true
-bool compare_time(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
+bool compare_time(array<uint32_t, 2> time1, array<uint32_t, 2> time2)
 {
     if (time1[0] < time2[0] || (time1[0] == time2[0] && time1[1] < time2[1]))
         return false;
@@ -94,12 +95,13 @@ bool compare_time(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
 
 // считает, сколько целых часов прошло между двумя моментами времени
 // (округление с избытком)
-int spent_hours(array<unsigned int, 2> time1, array<unsigned int, 2> time2)
+int spent_hours(array<uint32_t, 2> time1, array<uint32_t, 2> time2)
 {
     if (time1 == time2)
         return 0;
     if (!compare_time(time1, time2))
-        return ceil((time2[0] + (float)time2[1] / MINS) - (time1[0] + (float)time1[1] / MINS));
+        return ceil((time2[0] + (float)time2[1] / MINS) - 
+                    (time1[0] + (float)time1[1] / MINS));
     return -1;
 }
 
@@ -120,8 +122,8 @@ void show_revenue(proc_vars *proc, initial init)
 
     for (int i = 0; i < proc->revenue.size(); ++i)
         cout << i + 1 << " " << proc->revenue[i] << " "
-             << int_to_str({proc->total_occ_time[i] / MINS, proc->total_occ_time[i] % MINS})
-             << endl;
+             << int_to_str({proc->total_occ_time[i] / MINS, 
+                            proc->total_occ_time[i] % MINS}) << endl;
 }
 
 // обрабатывает первые 3 строки текстового файла:
