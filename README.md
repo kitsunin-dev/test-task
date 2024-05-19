@@ -13,7 +13,7 @@
 
 Для начала склонируйте репозиторий к себе на компьютер через команду терминала:
 ```
-git clone https://github.com/kitsunin-dev/test-task.git
+git clone https://github.com/sindwrr/club_system.git
 ```
 Способы сборки проекта:
 
